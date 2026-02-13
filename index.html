@@ -1,36 +1,114 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Mushaf Abu Jibril</title>
-<style>
-  body{
-    margin:0;
-    background:#f5f5f5;
-    display:flex;
-    justify-content:center;
-    align-items:flex-start;
-    padding:12px 0;
-  }
-  .container{
-    width:100%;
-    max-width:900px;
-  }
-  img{
-    width:100%;
-    height:auto;
-    display:block;
-    background:#fff;
-    margin-bottom:12px;
-  }
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mushaf Abu Jibril</title>
+
+  <style>
+    :root{
+      --bg:#f5f5f5;
+      --pageMax: 900px;
+    }
+
+    body{
+      margin:0;
+      background:var(--bg);
+      overflow:hidden; /* نخفي التمرير العمودي للصفحة نفسها */
+      font-family: system-ui, -apple-system, "Segoe UI", Arial;
+    }
+
+    /* شريط الصفحات */
+    .slider{
+      height:100dvh;
+      display:flex;
+      flex-direction:row;         /* الصفحات بجانب بعض */
+      overflow-x:auto;
+      overflow-y:hidden;
+      scroll-snap-type:x mandatory; /* هذا هو “الانتقال الاحترافي” */
+      scroll-behavior:smooth;       /* انتقال ناعم عند البرمجة/الأزرار */
+      -webkit-overflow-scrolling:touch;
+      gap: 0;
+      padding: 12px 0;
+    }
+
+    /* نخفي شريط التمرير */
+    .slider::-webkit-scrollbar{ height:0; }
+    .slider{ scrollbar-width:none; }
+
+    /* كل صفحة */
+    .page{
+      flex: 0 0 100%;              /* كل صفحة بعرض الشاشة */
+      scroll-snap-align:center;     /* تثبيت الصفحة في الوسط */
+      display:flex;
+      justify-content:center;
+      align-items:flex-start;
+      padding: 0 12px;
+      box-sizing:border-box;
+    }
+
+    .page img{
+      width:100%;
+      max-width: var(--pageMax);
+      height:auto;
+      display:block;
+      background:white;
+      border-radius: 14px;
+      box-shadow: 0 8px 28px rgba(0,0,0,.12);
+    }
+
+    /* اختياري: أزرار تنقل بسيطة */
+    .nav{
+      position:fixed;
+      left:12px;
+      right:12px;
+      bottom:12px;
+      display:flex;
+      justify-content:space-between;
+      pointer-events:none;
+    }
+    .btn{
+      pointer-events:auto;
+      padding:10px 14px;
+      border-radius:999px;
+      border:0;
+      background:white;
+      box-shadow: 0 8px 20px rgba(0,0,0,.12);
+      font-size:14px;
+    }
+  </style>
 </head>
+
 <body>
-  <div class="container">
-    <img src="https://cdn.jsdelivr.net/gh/abdulbaqi-sayani/mushaf-abu-jibril@main/page1.jpg" alt="page 1" />
-    <!-- بعد ما ترفع page2.jpg فعّل السطر التالي -->
-    <!-- <img src="https://cdn.jsdelivr.net/gh/abdulbaqi-sayani/mushaf-abu-jibril@main/page2.jpg" alt="page 2" /> -->
+
+  <div class="slider" id="slider" aria-label="Mushaf pages">
+    <!-- جرّب صفحة واحدة -->
+    <div class="page">
+      <img src="https://cdn.jsdelivr.net/gh/abdulbaqi-sayani/mushaf-abu-jibril@main/page1.jpg" alt="page 1">
+    </div>
+
+    <!-- لو أضفت صفحة ثانية لاحقًا -->
+    <!--
+    <div class="page">
+      <img src="https://cdn.jsdelivr.net/gh/abdulbaqi-sayani/mushaf-abu-jibril@main/page2.jpg" alt="page 2">
+    </div>
+    -->
   </div>
+
+  <div class="nav">
+    <button class="btn" onclick="go(-1)">السابق</button>
+    <button class="btn" onclick="go(1)">التالي</button>
+  </div>
+
+  <script>
+    const slider = document.getElementById('slider');
+
+    function go(dir){
+      // عرض الصفحة = عرض الشاشة (لأن .page = 100%)
+      const w = slider.clientWidth;
+      slider.scrollBy({ left: dir * w, behavior: 'smooth' });
+    }
+  </script>
+
 </body>
 </html>
